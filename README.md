@@ -2,91 +2,209 @@
 
 ## Overview
 
-This project focuses on cleaning, analyzing, and transforming an E-Commerce transaction dataset.
+This project focuses on performing Advanced Exploratory Data Analysis (EDA), Data Cleaning, Outlier Detection, and Feature Engineering on an E-Commerce transaction dataset.
 
-The objective was to prepare raw business data for future Machine Learning applications through data cleaning, exploratory data analysis (EDA), outlier analysis, and feature engineering.
+The goal was to transform raw transactional data into a clean and structured dataset suitable for future Machine Learning applications.
 
 ---
 
 # Tasks Completed
 
+## Data Loading & Inspection
+
+* Loaded the E-Commerce dataset using Pandas.
+* Examined dataset structure and dimensions.
+* Verified data types of all features.
+* Analyzed dataset shape and summary information.
+
+---
+
 ## Missing Value Handling
 
-* Identified missing values in the dataset.
+* Identified missing values across all columns.
 * Found missing records in the `CouponCode` column.
-* Replaced missing coupon values with **"No Coupon"**.
-* Verified that the final dataset contains no missing values.
+* Replaced missing values with **"No Coupon"**.
+* Verified that the dataset contains no remaining missing values.
 
 ---
 
-## Data Formatting & Consistency
+## Data Formatting
 
 * Converted the `Date` column to datetime format.
-* Checked data types of all features.
-* Verified dataset consistency and integrity.
-* Confirmed that no duplicate records were present.
+* Created new date-related features:
+
+  * OrderMonth
+  * OrderYear
+  * OrderQuarter
 
 ---
 
-## Exploratory Data Analysis (EDA)
+## Data Validation
 
-Performed detailed analysis on both numerical and categorical features.
+* Verified whether:
 
-### Numerical Analysis
+```text
+TotalPrice = Quantity × UnitPrice
+```
 
-* Quantity Distribution
-* Unit Price Distribution
-* Total Price Distribution
-* Items in Cart Analysis
-
-### Categorical Analysis
-
-* Product Popularity Analysis
-* Payment Method Analysis
-* Order Status Analysis
-* Referral Source Analysis
-* Coupon Usage Analysis
+* Created a temporary validation feature (`CheckPrice`) to confirm data consistency.
+* Removed the validation column after verification.
 
 ---
 
-## Outlier Analysis
+# Exploratory Data Analysis (EDA)
 
-* Detected outliers using the **Interquartile Range (IQR) Method**.
-* Analyzed:
+## Univariate Analysis
 
-  * Quantity
-  * UnitPrice
-  * TotalPrice
-* Evaluated whether detected outliers represented data errors or genuine business transactions.
-* Retained meaningful high-value transactions to preserve business insights.
+Performed distribution analysis on:
 
----
+* Quantity
+* UnitPrice
+* TotalPrice
 
-## Feature Engineering
+Used:
 
-Created new features to improve future Machine Learning performance.
-
-| Feature         | Description                                           |
-| --------------- | ----------------------------------------------------- |
-| DiscountApplied | Indicates whether a coupon was used (0 = No, 1 = Yes) |
-| AvgItemValue    | Average value of purchased items                      |
-| BasketValue     | Average value per item in cart                        |
-| HighValueOrder  | Indicates orders above average transaction value      |
-| CartRatio       | Ratio of cart items to purchased quantity             |
-| OrderMonth      | Month in which the order was placed                   |
-| OrderQuarter    | Quarter in which the order was placed (Q1–Q4)         |
+* Histograms
+* Distribution Curves (KDE)
 
 ---
 
-# Key Insights
+## Categorical Analysis
 
-* Coupon usage behavior was analyzed.
-* Most frequently purchased products were identified.
-* Popular payment methods were determined.
-* Customer acquisition channels were analyzed using referral sources.
-* Order status trends were examined.
-* High-value purchasing patterns were identified.
-* Seasonal ordering patterns were analyzed using monthly and quarterly features.
+Analyzed:
+
+### Product Analysis
+
+* Examined product frequency distribution.
+* Identified product occurrence patterns.
+
+### Payment Method Analysis
+
+* Visualized payment method distribution.
+* Compared customer payment preferences.
+
+### Order Status Analysis
+
+* Examined distribution of order statuses.
+* Analyzed order completion patterns.
+
+---
+
+# Outlier Detection
+
+Outliers were detected using the **Interquartile Range (IQR) Method**.
+
+Features analyzed:
+
+* Quantity
+* UnitPrice
+* TotalPrice
+
+### IQR Formula
+
+```text
+IQR = Q3 − Q1
+```
+
+### Lower Bound
+
+```text
+Q1 − 1.5 × IQR
+```
+
+### Upper Bound
+
+```text
+Q3 + 1.5 × IQR
+```
+
+---
+
+# Outlier Treatment
+
+Applied outlier treatment using:
+
+```python
+numpy.clip()
+```
+
+Outliers were capped for:
+
+* Quantity
+* UnitPrice
+* TotalPrice
+
+This helped reduce the influence of extreme values while preserving the dataset.
+
+---
+
+# Feature Engineering
+
+Created several new features to enhance analytical and Machine Learning capabilities.
+
+| Feature         | Description                                      |
+| --------------- | ------------------------------------------------ |
+| OrderMonth      | Month in which the order was placed              |
+| OrderYear       | Year in which the order was placed               |
+| OrderQuarter    | Quarter in which the order was placed            |
+| AvgItemValue    | Average value per purchased item                 |
+| DiscountApplied | Indicates whether a coupon was used              |
+| BasketValue     | Average value per item in cart                   |
+| HighValueOrder  | Indicates orders above average transaction value |
+| CartRatio       | Ratio of cart items to purchased quantity        |
+
+---
+
+# Correlation Analysis
+
+Performed correlation analysis on numerical features.
+
+### Techniques Used
+
+* Correlation Matrix
+* Heatmap Visualization
+
+Purpose:
+
+* Identify relationships between numerical features.
+* Detect highly correlated variables.
+* Support future feature selection.
+
+---
+
+# Feature Encoding
+
+Converted categorical features into numerical representations using:
+
+```python
+pd.get_dummies()
+```
+
+Encoded:
+
+* Product
+* PaymentMethod
+* OrderStatus
+* ReferralSource
+
+This prepares the dataset for Machine Learning models.
+
+---
+
+# Dataset Export
+
+Generated and exported:
+
+```text
+cleaned_dataset.csv
+```
+
+The final dataset contains:
+
+* Cleaned data
+* Engineered features
+* Treated outliers
+* Machine Learning-ready structure
 
 ---
 
@@ -103,39 +221,19 @@ Created new features to improve future Machine Learning performance.
 
 ---
 
-# Dataset Summary
+# Project Outputs
 
-| Metric            | Value                   |
-| ----------------- | ----------------------- |
-| Total Records     | 1200                    |
-| Total Features    | 14                      |
-| Missing Values    | CouponCode Only         |
-| Duplicate Records | 0                       |
-| Dataset Type      | E-Commerce Transactions |
-
----
-
-# Output
-
-* Cleaned Dataset
-* EDA Report
-* Outlier Analysis
-* Feature Engineered Dataset
-* Business Insights
-* Machine Learning Ready Dataset
-
----
-
-# Project Structure
-
-```text
-Decode-Lab-Data-Science-Internship-Projects/
-│
-├── raw_dataset.csv
-├── cleaned_dataset.csv
-├── Project1_Advanced_EDA.ipynb
-└── README.md
-```
+* Missing Value Analysis
+* Data Cleaning
+* Date Feature Extraction
+* Univariate EDA
+* Categorical Analysis
+* Outlier Detection
+* Outlier Treatment
+* Feature Engineering
+* Correlation Analysis
+* Encoded Dataset
+* Cleaned Dataset Export
 
 ---
 
@@ -146,3 +244,4 @@ Decode-Lab-Data-Science-Internship-Projects/
 Data Science Intern
 
 Python | Data Analytics | Machine Learning Enthusiast
+
